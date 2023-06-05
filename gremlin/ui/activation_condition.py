@@ -628,7 +628,8 @@ class VJoyConditionWidget(AbstractConditionWidget):
         if data["input_type"] == InputType.JoystickAxis:
             self.condition_data.comparison = "inside"
         elif data["input_type"] == InputType.JoystickButton:
-            self.condition_data.comparison = "pressed"
+            # comparision is already set, no need to do anything
+            pass
         elif data["input_type"] == InputType.JoystickHat:
             self.condition_data.comparison = \
                 util.hat_tuple_to_direction((0, 0))
