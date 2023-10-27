@@ -1,12 +1,12 @@
 echo "Starting to build Gremlin ..."
-C:
-cd C:\Users\Ivan\PycharmProjects\JoystickGremlin
+J:
+cd J:\git\JoystickGremlin
 
 echo "Building executable ..."
-pyinstaller -y --clean joystick_gremlin.spec
+C:\python\Python37-32\Scripts\pyinstaller -y --clean joystick_gremlin.spec
 
 echo "Generating WIX ..."
-python generate_wix.py
+C:\python\Python37-32\python generate_wix.py
 copy /Y joystick_gremlin.wxs dist\joystick_gremlin.wxs
 
 echo "Building MSI installer ..."
@@ -19,5 +19,3 @@ del joystick_gremlin.msi
 "C:\Program Files (x86)\WiX Toolset v3.11\bin\light.exe" -ext WixUiExtension joystick_gremlin.wixobj
 
 cd ..
-
-@pause
