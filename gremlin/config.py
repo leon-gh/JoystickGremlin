@@ -527,3 +527,20 @@ class Configuration:
         """
         self._data["window_location"] = value
         self.save()
+
+    @property
+    def use_last_remap_action(self):
+        """Returns whether or not to use last remap action settings.
+
+        :return True if enabled, otherwise False
+        """
+        return self._data.get("use_last_remap_action", False)
+
+    @use_last_remap_action.setter
+    def use_last_remap_action(self, value):
+        """Sets whether or not to use last remap action settings.
+
+        :param value True to enable, False to disable
+        """
+        self._data["use_last_remap_action"] = value
+        self.save()

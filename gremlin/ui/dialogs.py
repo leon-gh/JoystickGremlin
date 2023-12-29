@@ -110,6 +110,16 @@ class OptionsUi(common.BaseDialogUi):
         self.show_mode_change_message.setChecked(
             self.config.mode_change_message
         )
+        # Use last remap action
+        self.use_last_remap_action = QtWidgets.QCheckBox(
+            "When creating new remap action, use settings from the previous remap action."
+        )
+        self.use_last_remap_action.clicked.connect(
+            self._use_last_remap_action
+        )
+        self.use_last_remap_action.setChecked(
+            self.config.use_last_remap_action
+        )
 
         # Default action selection
         self.default_action_layout = QtWidgets.QHBoxLayout()
@@ -167,6 +177,7 @@ class OptionsUi(common.BaseDialogUi):
         self.general_layout.addWidget(self.start_minimized)
         self.general_layout.addWidget(self.start_with_windows)
         self.general_layout.addWidget(self.show_mode_change_message)
+        self.general_layout.addWidget(self.use_last_remap_action)
         self.general_layout.addLayout(self.default_action_layout)
         self.general_layout.addLayout(self.macro_axis_polling_layout)
         self.general_layout.addLayout(self.macro_axis_minimum_change_layout)
@@ -504,6 +515,13 @@ class OptionsUi(common.BaseDialogUi):
 
         :param clicked whether or not the checkbox is ticked"""
         self.config.mode_change_message = clicked
+        self.config.save()
+
+    def _use_last_remap_action(self, clicked):
+        """Stores the user's preference for using last remap action.
+
+        :param clicked whether or not the checkbox is ticked"""
+        self.config.use_last_remap_action = clicked
         self.config.save()
 
     def _update_profile(self):

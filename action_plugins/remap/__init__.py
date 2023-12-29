@@ -113,6 +113,7 @@ class RemapWidget(gremlin.ui.input_item.AbstractActionWidget):
 
     def _populate_ui(self):
         """Populates the UI components."""
+        
         # Get the appropriate vjoy device identifier
         vjoy_dev_id = 0
         if self.action_data.vjoy_device_id not in [0, None]:
@@ -125,18 +126,24 @@ class RemapWidget(gremlin.ui.input_item.AbstractActionWidget):
 
         # If no valid input item is selected get the next unused one
         if self.action_data.vjoy_input_id in [0, None]:
-            free_inputs = self._get_profile_root().list_unused_vjoy_inputs()
-
-            input_name = self.type_to_name_map[input_type].lower()
-            input_type = self.name_to_type_map[input_name.capitalize()]
-            if vjoy_dev_id == 0:
-                vjoy_dev_id = sorted(free_inputs.keys())[0]
-            input_list = free_inputs[vjoy_dev_id][input_name]
-            # If we have an unused item use it, otherwise use the first one
-            if len(input_list) > 0:
-                vjoy_input_id = input_list[0]
+            last_remap_action_data = self._get_profile_root().get_last_remap_action_data()
+            if self._get_profile_root().last_remap_action_enabled() and last_remap_action_data is not None:
+                vjoy_dev_id = last_remap_action_data.vjoy_device_id
+                vjoy_input_id = last_remap_action_data.vjoy_input_id
+                input_type = last_remap_action_data.input_type
             else:
-                vjoy_input_id = 1
+                free_inputs = self._get_profile_root().list_unused_vjoy_inputs()
+
+                input_name = self.type_to_name_map[input_type].lower()
+                input_type = self.name_to_type_map[input_name.capitalize()]
+                if vjoy_dev_id == 0:
+                    vjoy_dev_id = sorted(free_inputs.keys())[0]
+                input_list = free_inputs[vjoy_dev_id][input_name]
+                # If we have an unused item use it, otherwise use the first one
+                if len(input_list) > 0:
+                    vjoy_input_id = input_list[0]
+                else:
+                    vjoy_input_id = 1
         # If a valid input item is present use it
         else:
             vjoy_input_id = self.action_data.vjoy_input_id
@@ -176,6 +183,8 @@ class RemapWidget(gremlin.ui.input_item.AbstractActionWidget):
             vjoy_data = self.vjoy_selector.get_selection()
             input_type_changed = \
                 self.action_data.input_type != vjoy_data["input_type"]
+            input_changed = (input_type_changed or (self.action_data.vjoy_device_id != vjoy_data["device_id"]) or
+                             (self.action_data.vjoy_input_id != vjoy_data["input_id"]))
             self.action_data.vjoy_device_id = vjoy_data["device_id"]
             self.action_data.vjoy_input_id = vjoy_data["input_id"]
             self.action_data.input_type = vjoy_data["input_type"]
@@ -189,6 +198,11 @@ class RemapWidget(gremlin.ui.input_item.AbstractActionWidget):
             # Signal changes
             if input_type_changed:
                 self.action_modified.emit()
+
+            # save last remap action data
+            if input_changed:
+                self._get_profile_root().save_last_remap_action_data(self.action_data)
+
         except gremlin.error.GremlinError as e:
             logging.getLogger("system").error(str(e))
 
