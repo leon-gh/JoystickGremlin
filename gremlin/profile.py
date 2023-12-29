@@ -33,6 +33,7 @@ from gremlin.common import DeviceType, InputType, MergeAxisOperation, \
     PluginVariableType
 from . import base_classes, common, error, input_devices, joystick_handling, \
     plugin_manager, util
+from gremlin.config import Configuration
 
 
 # Data struct representing profile information of a device
@@ -1314,6 +1315,7 @@ class Profile:
         self.plugins = []
         self.settings = Settings(self)
         self.parent = None
+        self.last_remap_action_data = None
 
     def initialize_joystick_device(self, device, modes):
         """Ensures a joystick is properly initialized in the profile.
@@ -1673,6 +1675,14 @@ class Profile:
 
         return entry
 
+    def save_last_remap_action_data(self, action_data):
+        self.last_remap_action_data = action_data
+
+    def get_last_remap_action_data(self):
+        return self.last_remap_action_data
+
+    def last_remap_action_enabled(self):
+        return Configuration().use_last_remap_action
 
 class Device:
 
