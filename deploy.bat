@@ -9,7 +9,7 @@ echo "Generating WIX ..."
 C:\python\Python37-32\python generate_wix.py
 copy /Y joystick_gremlin.wxs dist\joystick_gremlin.wxs
 
-echo "Building MSI installer ..."
+@echo "Building MSI installer ..."
 cd dist
 del /Q PFiles
 del joystick_gremlin.wixobj

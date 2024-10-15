@@ -42,3 +42,6 @@ import gremlin.tts
 import gremlin.util
 import gremlin.windows_event_hook
 import gremlin.clipboard
+
+# hack for profile loading, this has to be done differently eventually
+gremlin_ui = None

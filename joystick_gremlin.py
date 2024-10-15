@@ -818,8 +818,9 @@ class GremlinUi(QtWidgets.QMainWindow):
         """Handles changes in the active process.
 
         If the active process has a known associated profile it is
-        loaded and activated if none exists the application is
-        disabled.
+        loaded and activated. If none exists and the user has not
+        enabled the option to keep the last profile active, the current
+        profile is disabled,
 
         :param path the path to the currently active process executable
         """
@@ -832,7 +833,7 @@ class GremlinUi(QtWidgets.QMainWindow):
             self.ui.actionActivate.setChecked(True)
             self.activate(True)
             self._profile_auto_activated = True
-        elif self._profile_auto_activated:
+        elif self._profile_auto_activated and not self.config.keep_last_autoload:
             self.ui.actionActivate.setChecked(False)
             self.activate(False)
             self._profile_auto_activated = False
@@ -1278,7 +1279,8 @@ if __name__ == "__main__":
     app.setApplicationDisplayName("Joystick Gremlin")
 
     # Ensure joystick devices are correctly setup
-    time.sleep(1)
+    dill.DILL.init()
+    time.sleep(0.25)
     gremlin.joystick_handling.joystick_devices_initialization()
 
     # Check if vJoy is properly setup and if not display an error
@@ -1321,6 +1323,9 @@ if __name__ == "__main__":
     # Create Gremlin UI
     ui = GremlinUi()
     syslog.info("Gremlin UI created")
+
+    # hack for profile loading
+    gremlin.gremlin_ui = ui
 
     # Handle user provided command line arguments
     if args.profile is not None and os.path.isfile(args.profile):
