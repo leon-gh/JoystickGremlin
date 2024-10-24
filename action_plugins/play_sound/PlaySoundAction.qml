@@ -69,16 +69,15 @@ Item {
             text: "Volume"
         }
 
-        TextField {
+        SpinBox {
             id: _soundVolume
-
-            Layout.fillWidth: false
-            Layout.preferredWidth: 50
-            text: action.sound_volume
-            selectByMouse: true
-
-            onTextChanged: {
-                action.sound_volume = text
+            Layout.preferredWidth: 100
+            value: 50
+            from: 0
+            to: 100
+            editable: true
+            onValueModified: {
+                action.sound_volume = value
             }
         }
    }
