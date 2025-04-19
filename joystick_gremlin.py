@@ -27,6 +27,7 @@ import os
 import sys
 import time
 import traceback
+import subprocess
 
 # Import QtMultimedia so pyinstaller doesn't miss it
 import PyQt5
@@ -987,6 +988,18 @@ class GremlinUi(QtWidgets.QMainWindow):
                     fname, error
                 )
             )
+
+    def _do_launch_app(self, fname):
+        """Launch application with given filename.
+
+        :param fname the name of the application to launch
+        """
+
+        # ignore all exceptions from subprocess
+        try:
+            subprocess.run([fname], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except subprocess.SubprocessError:
+            pass
 
     def _force_close(self):
         """Forces the closure of the program."""

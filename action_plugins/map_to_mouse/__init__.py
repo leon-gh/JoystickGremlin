@@ -94,9 +94,9 @@ class MapToMouseWidget(gremlin.ui.input_item.AbstractActionWidget):
         self.motion_layout.addWidget(self.y_axis, 0, 2, 1, 2, QtCore.Qt.AlignLeft)
 
         self.min_speed = QtWidgets.QSpinBox()
-        self.min_speed.setRange(0, 1e5)
+        self.min_speed.setRange(0, int(1e5))
         self.max_speed = QtWidgets.QSpinBox()
-        self.max_speed.setRange(0, 1e5)
+        self.max_speed.setRange(0, int(1e5))
         self.motion_layout.addWidget(
             QtWidgets.QLabel("Minimum speed"), 1, 0, QtCore.Qt.AlignLeft
         )
